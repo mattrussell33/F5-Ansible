@@ -1,0 +1,63 @@
+username: your_username
+password: your_password
+
+inventory_hostname: '192.168.1.203'
+
+module_provisioning:
+ - name: 'asm'
+   level: 'nominal'
+ - name: 'ltm'
+   level: 'nominal'
+ - name: 'gtm'
+   level: 'nominal'
+
+vlan_information:
+ - name: 'External'
+   interface: '1.1'
+ - name: 'Internal'
+   interface: '1.2'
+ - name: 'wifi_External'
+   interface: '1.1'
+ - name: 'wifi_Internal'
+   interface: '1.2'
+# - name: 'HA'
+#   interface: '1.3'  
+
+selfip_information:
+ - name: 'External-SelfIP'
+   address: '10.2.0.13'
+   netmask: '255.255.255.0'
+   vlan: 'External'
+   traffic_group: 'traffic-group-local-only'
+   allow_service: 'default'
+ - name: 'External-SelfIP-Floating'
+   address: '10.2.0.14'
+   netmask: '255.255.255.0'
+   vlan: 'External'
+   traffic_group: 'traffic-group-1'
+   allow_service: 'default'
+ - name: 'Internal-SelfIP'
+   address: '10.1.0.13'
+   netmask: '255.255.255.0'
+   vlan: 'Internal'
+   traffic_group: 'traffic-group-local-only'
+   allow_service: 'default'
+ - name: 'Internal-SelfIP-Floating'
+   address: '10.1.0.14'
+   netmask: '255.255.255.0'
+   vlan: 'Internal'
+   traffic_group: 'traffic-group-1'
+   allow_service: 'default'
+#- name: 'HA-SelfIP'
+#   address: '192.168.68.5'
+#   netmask: '255.255.255.0'
+#   vlan: 'HA'
+#   allow_service: 'default'
+
+RD_information:
+ - id: "1"
+   state: "present"
+   vlans: 
+      - "wifi_Internal"
+      - "wifi_External"
+

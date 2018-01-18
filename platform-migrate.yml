@@ -1,0 +1,60 @@
+---
+- name: Base Config for platform-migrate
+  hosts: bigip
+  gather_facts: false
+  vars_files:
+    - var-platform-migrate_file.yml
+
+  tasks:
+
+  - name: Configure VLANs on the BIG-IP
+    bigip_vlan: 
+     server: "{{ inventory_hostname }}"
+     user: "{{ username }}"
+     password: "{{ password }}"
+     validate_certs: False
+     name: "{{ item.name }}"
+     #tag: "{{ item.tag }}"
+     tagged_interface: "{{ item.interface }}"
+    with_items: "{{ vlan_information }}"
+    delegate_to: localhost
+
+  - name: Configure SELF-IPs on the BIG-IP
+    bigip_selfip: 
+     server: "{{ inventory_hostname }}"
+     user: "{{ username }}"
+     password: "{{ password }}"
+     validate_certs: False
+     name: "{{ item.name }}"
+     address: "{{ item.address }}"
+     netmask: "{{ item.netmask }}"
+     vlan: "{{ item.vlan }}"
+     allow_service: "{{item.allow_service}}"
+    with_items: "{{ selfip_information }}"
+    delegate_to: localhost
+
+  - name: Create a route domain
+    bigip_routedomain:
+     id: "{{ item.id }}"
+     password: "{{ password }}"
+     server: "{{ inventory_hostname }}"
+     state: "{{ item.state }}"
+     user: "{{ username }}"
+    with_items: "{{ RD_information }}"
+    delegate_to: localhost
+
+  - name: Set VLANs on the route domain
+    bigip_routedomain:
+     id: "{{ item.id }}"
+     password: "{{ password }}"
+     server: "{{ inventory_hostname }}"
+     state: "{{ item.state }}"
+     user: "{{ username }}"
+     vlans: "{{ item.vlans }}"
+    with_items: "{{ RD_information }}"
+    delegate_to: localhost
+
+
+
+
+
